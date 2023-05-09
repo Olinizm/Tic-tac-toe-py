@@ -2,7 +2,14 @@ import os
 from colorama import Fore, Back
 
 
+
 def main():
+    
+    players = 0
+    while int(players) != 1 and int(players) != 2:
+        os.system('cls')
+        players = int(input("Podaj ilość graczy (1 albo 2): "))
+
     rozmiar = 10
     dane = []
     for i in range(rozmiar):
@@ -10,17 +17,17 @@ def main():
         dane.append(kolumna)
     
     # print(dane)
-   
 
-    gracz = 1
-    while True:
-        screenXO(dane)
-        if gracz == 1: printGreen("Gracz 1\n")
-        else: printRed("Gracz 2\n")
-        x = int(input("Podaj wsp x: "))
-        y = int(input("Podaj wsp y: "))
-        dane[y][x] = gracz
-        gracz *= -1
+    if players == 2:
+        gracz = 1
+        while True:
+            screenXO(dane)
+            if gracz == 1: printGreen("Gracz 1\n")
+            else: printRed("Gracz 2\n")
+            x = int(input("Podaj wsp x: "))
+            y = int(input("Podaj wsp y: "))
+            dane[y][x] = gracz
+            gracz *= -1
 
 
 def printWhite(data):

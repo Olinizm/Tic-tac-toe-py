@@ -8,7 +8,7 @@ def main():
     players = 0
     while int(players) != 1 and int(players) != 2:
         os.system('cls')
-        players = int(input("Podaj ilość graczy (1 albo 2): "))
+        players = int(input("Podaj liczbę graczy (1 albo 2): "))
 
     rozmiar = 10
     dane = []
@@ -26,8 +26,9 @@ def main():
             else: printRed("Gracz 2\n")
             x = int(input("Podaj wsp x: "))
             y = int(input("Podaj wsp y: "))
-            dane[y][x] = gracz
-            gracz *= -1
+            if not dane[x][y]:
+                dane[y][x] = gracz
+                gracz *= -1
 
 
 def printWhite(data):

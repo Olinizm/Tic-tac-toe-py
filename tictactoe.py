@@ -1,6 +1,6 @@
 import os
 from colorama import Fore, Back
-
+import random
 
 
 def main():
@@ -24,8 +24,22 @@ def main():
             screenXO(dane)
             if gracz == 1: printGreen("Gracz 1\n")
             else: printRed("Gracz 2\n")
-            x = int(input("Podaj wsp x: "))
-            y = int(input("Podaj wsp y: "))
+            x = int(input("Podaj wsp x: ")) - 1
+            y = int(input("Podaj wsp y: ")) - 1
+            if not dane[x][y]:
+                dane[y][x] = gracz
+                gracz *= -1
+    else:
+        gracz = 1
+        while True:
+            screenXO(dane)
+            if gracz == 1: 
+                printGreen("Twoja tura\n")
+                x = int(input("Podaj wsp x: ")) - 1
+                y = int(input("Podaj wsp y: ")) - 1
+            else:
+                x = random.randint(0, rozmiar - 1)
+                y = random.randint(0, rozmiar - 1)
             if not dane[x][y]:
                 dane[y][x] = gracz
                 gracz *= -1

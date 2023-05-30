@@ -9,7 +9,16 @@ def main():
     while int(players) != 1 and int(players) != 2:
         os.system('cls')
         players = int(input("Podaj liczbę graczy (1 albo 2): "))
+    win_req = 3
+    while size < 3:
+        size = int(input("Podaj rozmiar planszy większy od 2: "))
+        os.system('cls')
+        if size < 3:
+            print("Nieprawidłowa wielkość planszy")
+        elif size > 5:
+            win_req = 5
 
+    gameOver = False
     rozmiar = 10
     dane = []
     for i in range(rozmiar):

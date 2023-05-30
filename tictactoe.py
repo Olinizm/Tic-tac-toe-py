@@ -3,12 +3,17 @@ from colorama import Fore, Back
 import random
 
 
+
 def main():
     
     players = 0
     while int(players) != 1 and int(players) != 2:
         os.system('cls')
         players = int(input("Podaj liczbę graczy (1 albo 2): "))
+
+    os.system('cls')
+    size = 0
+
     win_req = 3
     while size < 3:
         size = int(input("Podaj rozmiar planszy większy od 2: "))
@@ -19,39 +24,53 @@ def main():
             win_req = 5
 
     gameOver = False
-    rozmiar = 10
-    dane = []
-    for i in range(rozmiar):
-        kolumna = [0 for i in range(rozmiar)]
-        dane.append(kolumna)
-    
-    # print(dane)
+
+    data = []
+    for i in range(size):
+        kolumna = [0 for i in range(size)]
+        data.append(kolumna)
+
+    winner = 0
 
     if players == 2:
-        gracz = 1
-        while True:
-            screenXO(dane)
-            if gracz == 1: printGreen("Gracz 1\n")
+        player = 1
+        while not gameOver:
+            screenXO(data)
+            if player == 1: printGreen("Gracz 1\n")
             else: printRed("Gracz 2\n")
             x = int(input("Podaj wsp x: ")) - 1
             y = int(input("Podaj wsp y: ")) - 1
-            if not dane[x][y]:
-                dane[y][x] = gracz
-                gracz *= -1
+            if not data[y][x]:
+                data[y][x] = player
+                gameOver = checkWin(data, x, y, player)
+                player *= -1
     else:
-        gracz = 1
-        while True:
-            screenXO(dane)
-            if gracz == 1: 
+        player = 1
+        while not gameOver:
+            screenXO(data)
+            if player == 1: 
                 printGreen("Twoja tura\n")
                 x = int(input("Podaj wsp x: ")) - 1
                 y = int(input("Podaj wsp y: ")) - 1
             else:
-                x = random.randint(0, rozmiar - 1)
-                y = random.randint(0, rozmiar - 1)
-            if not dane[x][y]:
-                dane[y][x] = gracz
-                gracz *= -1
+                x = random.randint(0, size - 1)
+                y = random.randint(0, size - 1)
+            if not data[y][x]:
+                data[y][x] = player
+                
+                gameOver = checkWin(data, x, y, player, win_req)
+                if gameOver: winner = player # jeśli checkwin zwróci prawdę, możemy zapisać aktualnego gracza jako zwyciężce
+                if 0 not in data: gameOver = True # jeśli wszystkie pola zostały zajęte, kończymy grę
+                
+                player *= -1
+
+    screenXO(data)
+    if winner == 1:
+        printGreen("Player X won!")
+    elif winner == -1:
+        printRed("Player O won!")
+    else:
+        printWhite("Draw!")
 
 
 def printWhite(data):
@@ -111,7 +130,27 @@ def screenXO(screen):
 
     printWhite(corners["bottomLeft"]+verticalDown+corners["bottomRight"]+"\n")
 
-
+# after the player moved checks whether it was a winning move
+def checkWin(screen, x, y, player, win_req):
+    row = screen[y]
+    # counts the amount of repeated symbols in the row
+    count = 0
+    for i in row:
+        if i == player:
+            count += 1
+            if count >= win_req: return True
+        # resets the count when spotted a different symbol
+        else:
+            count = 0
+    
+    # counts the amount of repeats of a certain symbol in the column
+    count = 0
+    for i,row in screen:
+        if row[x] == player:
+            count += 1
+            if count >= win_req: return True
+        else:
+            count = 0
 
 if __name__ == "__main__":
     main()

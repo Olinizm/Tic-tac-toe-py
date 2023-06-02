@@ -21,7 +21,7 @@ def main():
         if size < 3:
             print("Nieprawidłowa wielkość planszy")
         elif size > 5:
-            win_req = 5
+            win_req = 4
 
     gameOver = False
 
@@ -152,12 +152,14 @@ def checkWin(screen, x, y, player, win_req):
         else:
             count = 0
 
+    # necessary for the bottom-left top-right diagonals
     if x > y:
         offset = x - y
     else:
         offset = y - x
     size = len(screen)
 
+    #checks for the streak on diagonals
     count = 0
     for i in range(offset, size - offset):
         if  (x >= y and screen[i - offset][i] == player) or (y > x and screen[i][i - offset] == player):
@@ -167,12 +169,12 @@ def checkWin(screen, x, y, player, win_req):
             count = 0
     
     count = 0
-    num_rows = x + y if x + y + 1 <= size else (size - x) + (size - y) - 2
+    num_rows = x + y if x + y + 1 <= size else (size - x) + (size - y) - 2 #checks how many diagonal fields are on the axis
     for i in range(num_rows + 1):
         if x + y + 1 <= size:
-            if screen[num_rows - i][i] == player:
+            if screen[num_rows - i][i] == player: #for each field in diagonal it's y value decreases while x increases
                 count += 1
-        elif screen[size - 1 - i][size - num_rows - 1 + i] == player:
+        elif screen[size - 1 - i][size - num_rows - 1 + i] == player: #I was writing it at 3am on coffee don't ask
             count += 1
             if count >= win_req: return True
         else:

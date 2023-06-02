@@ -60,7 +60,8 @@ def main():
                 
                 gameOver = checkWin(data, x, y, player, win_req)
                 if gameOver: winner = player # jeśli checkwin zwróci prawdę, możemy zapisać aktualnego gracza jako zwyciężce
-                if 0 not in data: gameOver = True # jeśli wszystkie pola zostały zajęte, kończymy grę
+                for list_ in data:
+                    if 0 not in list_: gameOver = True # jeśli wszystkie pola zostały zajęte, kończymy grę
                 
                 player *= -1
 
@@ -84,7 +85,6 @@ def printGreen(data):
 
 def screenXO(screen):
     os.system('cls')
-
     
     corners = {
                "upperLeft":     "┌",    #218 np. chr(218)
@@ -145,12 +145,41 @@ def checkWin(screen, x, y, player, win_req):
     
     # counts the amount of repeats of a certain symbol in the column
     count = 0
-    for i,row in screen:
+    for i,row in enumerate(screen):
         if row[x] == player:
             count += 1
             if count >= win_req: return True
         else:
             count = 0
+
+    if x > y:
+        offset = x - y
+    else:
+        offset = y - x
+    size = len(screen)
+
+    count = 0
+    for i in range(offset, size - offset):
+        if  (x >= y and screen[i - offset][i] == player) or (y > x and screen[i][i - offset] == player):
+            count += 1
+            if count >= win_req: return True
+        else:
+            count = 0
+    
+    count = 0
+    num_rows = x + y if x + y + 1 <= size else (size - x) + (size - y) - 2
+    for i in range(num_rows + 1):
+        if x + y + 1 <= size:
+            if screen[num_rows - i][i] == player:
+                count += 1
+        elif screen[size - 1 - i][size - num_rows - 1 + i] == player:
+            count += 1
+            if count >= win_req: return True
+        else:
+            count = 0
+    return False
+    
+
 
 if __name__ == "__main__":
     main()
